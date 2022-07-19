@@ -3,31 +3,30 @@ import { Server } from '@overnightjs/core';
 import * as http from 'http';
 import express from 'express';
 import ProductController from '@src/api/controllers/productController';
-import ComboController from './api/controllers/comboController';
+import ComboController from '@src/api/controllers/comboController';
+import ComboItemController from './api/controllers/comboItemController';
 
 export class SetupServer extends Server {
     private server?: http.Server;
-
     constructor(private port = 3000) {
         super();
     }
-
     public init(): void {
         this.setupExpress();
         this.setupControllers();
     }
-
     private setupExpress(): void {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
     }
-
     private setupControllers(): void {
         const productController = new ProductController();
         const comboController = new ComboController();
+        const comboItemController = new ComboItemController();
 
         this.addControllers(productController);
         this.addControllers(comboController);
+        this.addControllers(comboItemController);
     }
 
     public start(): void {

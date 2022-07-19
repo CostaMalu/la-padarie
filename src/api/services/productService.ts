@@ -109,14 +109,7 @@ export class ProductService {
             else {
 
                 await this.repository.update(id, name, price);
-
-                const product: Product = {
-                    id: id,
-                    name: name,
-                    price: price
-                }
-
-                serviceResponse.data = product
+                serviceResponse.data = await this.repository.findOne(id);
             }
 
             return serviceResponse;
