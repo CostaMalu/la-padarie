@@ -1,6 +1,4 @@
-## LaPadariePrime
-
----
+# LaPadariePrime
 
 ## Tabelas 
 
@@ -41,7 +39,7 @@ cada registro relaciona uma assinatura a um combo
 | FK_idCombo | int         | chave estrangeira            |
 
 
----
+
 
 ## Relacionamentos 
 
