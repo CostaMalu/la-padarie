@@ -47,7 +47,7 @@ export default class ProductController {
             if (!isValidProduct(productToCreate)) return res.sendStatus(400);
             else {
                 const result = await this.comboService.createProduct(productToCreate);
-                return result == null ? res.sendStatus(400) : res.sendStatus(201);
+                return result.sucess ? res.status(201).json(result) : res.status(400).json(result);
             }
 
         } catch (error) {
