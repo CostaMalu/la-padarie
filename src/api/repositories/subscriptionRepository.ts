@@ -30,6 +30,8 @@ export class SubscriptionRepository {
         return result[0];
 
     }
+
+
     public async getPrice(id: number) {
 
         const queryString = `
@@ -72,6 +74,7 @@ export class SubscriptionRepository {
 
         const result = await pool.promise().query(queryString, id);
         return result[0];
+
     }
 
 
@@ -90,8 +93,25 @@ export class SubscriptionRepository {
         WHERE       s.id = ?
         `;
 
+
         const result = await pool.promise().query(queryString, id);
         return result[0];
+
+    }
+
+
+    public async findByComboId(id: number): Promise<string> {
+
+        const queryString = `
+        SELECT      id, name, FK_idCombo as idCombo
+        FROM        subscription
+        WHERE       subscription.FK_idCombo = ?
+        `;
+
+        const result = await pool.promise().query(queryString, id);
+        let object = JSON.parse(JSON.stringify(result[0]));
+        Object.values(object).forEach(v => object = v);
+        return object.name;
 
     }
 

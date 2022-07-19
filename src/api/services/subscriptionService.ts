@@ -5,7 +5,6 @@ export class SubscriptionService {
 
     private repository: SubscriptionRepository;
 
-
     constructor() {
         this.repository = new SubscriptionRepository();
     }
@@ -17,9 +16,7 @@ export class SubscriptionService {
             sucess: true,
         };
 
-
         try {
-
             serviceResponse.data = await this.repository.findAll();
             return serviceResponse;
 
@@ -32,6 +29,8 @@ export class SubscriptionService {
 
         return serviceResponse;
     }
+
+
     public async findOne(id: number): Promise<ServiceResponse<Subscription>> {
 
         const serviceResponse: ServiceResponse<Subscription> = {
@@ -39,7 +38,6 @@ export class SubscriptionService {
         };
 
         try {
-
             const existingProduct = await this.repository.findOne(id);
             const existingProductString = JSON.stringify(existingProduct)
 
@@ -73,18 +71,24 @@ export class SubscriptionService {
             sucess: true,
         };
 
-
         try {
+            const existingProductName = await this.repository.findByComboId(idCombo);
+
+            if (existingProductName != null) {
+                serviceResponse.sucess = false;
+                serviceResponse.message = 'This combo is already assigned to a subscription';
+                return serviceResponse;
+            }
+
             serviceResponse.data = await this.repository.create(name, idCombo);
             return serviceResponse;
-        }
-        catch (error) {
+
+
+        } catch (error) {
             serviceResponse.sucess = false;
             serviceResponse.message = 'Unknown Error'
             if (error instanceof Error) serviceResponse.message = error.message
         }
-
-
         return serviceResponse;
     }
 
@@ -99,21 +103,17 @@ export class SubscriptionService {
 
 
         try {
-
             const existingProduct = await this.repository.findOne(id);
             const existingProductString = JSON.stringify(existingProduct)
-
 
             if (existingProductString == '{}' || existingProductString == '[]') {
                 serviceResponse.sucess = false;
                 serviceResponse.message = "This subscription doesn't exist"
             }
-
             else {
                 await this.repository.update(id, name, idCombo);
                 serviceResponse.data = await this.repository.findOne(id);
             }
-
 
             return serviceResponse;
 
@@ -145,8 +145,8 @@ export class SubscriptionService {
         }
 
         return serviceResponse;
-
     }
+
 
     public async getDetails(id: number): Promise<ServiceResponse<Subscription>> {
 
@@ -168,13 +168,14 @@ export class SubscriptionService {
             }
 
             return serviceResponse;
-        }
 
-        catch (error) {
+
+        } catch (error) {
             serviceResponse.sucess = false;
             serviceResponse.message = 'Unknown Error'
             if (error instanceof Error) serviceResponse.message = error.message
         }
+
 
         return serviceResponse;
     }
