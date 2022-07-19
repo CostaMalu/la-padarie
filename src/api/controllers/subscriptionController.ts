@@ -2,7 +2,6 @@ import { Controller, Delete, Get, Post, Put } from '@overnightjs/core';
 import { Request, Response } from 'express';
 import { SubscriptionService } from '@src/api/services/subscriptionService';
 import { BaseSubscription, isValidSubscription } from '@src/api/models/subscription';
-
 @Controller('api/subscription')
 export default class SubscriptionController {
 
@@ -19,7 +18,9 @@ export default class SubscriptionController {
         } catch (error) {
             return res.status(500).json({ errorMessage: error });
         }
+
     }
+
 
     @Get(':id')
     public async findOne(req: Request, res: Response) {
@@ -27,6 +28,19 @@ export default class SubscriptionController {
         try {
 
             const result = await this.repository.findOne(Number(req.params.id));
+            return res.status(200).json(result);
+
+        } catch (error) {
+            return res.status(500).json({ errorMessage: error });
+        }
+
+    }
+
+    @Get('details/:id')
+    public async getDetails(req: Request, res: Response) {
+
+        try {
+            const result = await this.repository.getDetails(Number(req.params.id));
             return res.status(200).json(result);
 
         } catch (error) {
@@ -41,6 +55,7 @@ export default class SubscriptionController {
             name: req.body.name,
             idCombo: req.body.idCombo,
         };
+
 
         try {
 
@@ -66,6 +81,7 @@ export default class SubscriptionController {
             idCombo: req.body.idCombo,
         };
 
+
         try {
 
             if (!isValidSubscription(subscriptionToUpdate)) return res.sendStatus(400);
@@ -74,10 +90,12 @@ export default class SubscriptionController {
                 return result.sucess ? res.status(200).json(result) : res.status(400).json(result)
             }
 
+
         } catch (error) {
             return res.status(500).json({ errorMessage: error });
         }
     }
+
 
     @Delete(':id')
     public async delete(req: Request, res: Response) {
@@ -92,5 +110,6 @@ export default class SubscriptionController {
         } catch (error) {
             return res.status(500).json({ errorMessage: error });
         }
+
     }
 }

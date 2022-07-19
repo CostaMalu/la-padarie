@@ -1,14 +1,15 @@
 import { ServiceResponse } from '@src/api/models/serviceResponse';
 import { BaseSubscription, Subscription } from '@src/api/models/subscription';
 import { SubscriptionRepository } from '@src/api/repositories/subscriptionRepository';
-
 export class SubscriptionService {
 
     private repository: SubscriptionRepository;
 
+
     constructor() {
         this.repository = new SubscriptionRepository();
     }
+
 
     public async findAllSubscriptions(): Promise<ServiceResponse<Subscription>> {
 
@@ -16,22 +17,21 @@ export class SubscriptionService {
             sucess: true,
         };
 
+
         try {
+
             serviceResponse.data = await this.repository.findAll();
             return serviceResponse;
-        }
 
-        catch (error) {
+        } catch (error) {
             serviceResponse.sucess = false;
             serviceResponse.message = 'Unknown Error'
             if (error instanceof Error) serviceResponse.message = error.message
         }
 
+
         return serviceResponse;
     }
-
-
-
     public async findOne(id: number): Promise<ServiceResponse<Subscription>> {
 
         const serviceResponse: ServiceResponse<Subscription> = {
@@ -39,6 +39,7 @@ export class SubscriptionService {
         };
 
         try {
+
             const existingProduct = await this.repository.findOne(id);
             const existingProductString = JSON.stringify(existingProduct)
 
@@ -51,17 +52,17 @@ export class SubscriptionService {
             }
 
             return serviceResponse;
-        }
 
-        catch (error) {
+
+        } catch (error) {
             serviceResponse.sucess = false;
             serviceResponse.message = 'Unknown Error'
             if (error instanceof Error) serviceResponse.message = error.message
         }
 
+
         return serviceResponse;
     }
-
 
 
     public async createSubscription(subscriptionToCreate: BaseSubscription): Promise<ServiceResponse<Subscription>> {
@@ -72,20 +73,19 @@ export class SubscriptionService {
             sucess: true,
         };
 
+
         try {
             serviceResponse.data = await this.repository.create(name, idCombo);
-
             return serviceResponse;
         }
-
         catch (error) {
             serviceResponse.sucess = false;
             serviceResponse.message = 'Unknown Error'
             if (error instanceof Error) serviceResponse.message = error.message
         }
 
-        return serviceResponse;
 
+        return serviceResponse;
     }
 
 
@@ -97,20 +97,74 @@ export class SubscriptionService {
             sucess: true,
         };
 
+
         try {
 
             const existingProduct = await this.repository.findOne(id);
             const existingProductString = JSON.stringify(existingProduct)
 
+
             if (existingProductString == '{}' || existingProductString == '[]') {
                 serviceResponse.sucess = false;
                 serviceResponse.message = "This subscription doesn't exist"
             }
+
             else {
-
                 await this.repository.update(id, name, idCombo);
-
                 serviceResponse.data = await this.repository.findOne(id);
+            }
+
+
+            return serviceResponse;
+
+        } catch (error) {
+            serviceResponse.sucess = false;
+            serviceResponse.message = 'Unknown Error'
+            if (error instanceof Error) serviceResponse.message = error.message
+        }
+
+        return serviceResponse;
+    }
+
+
+    public async deleteSubscription(id: number): Promise<ServiceResponse<Subscription>> {
+
+        const serviceResponse: ServiceResponse<Subscription> = {
+            sucess: true,
+        };
+
+        try {
+
+            await this.repository.delete(id);
+            serviceResponse.message = 'Subscription deleted'
+
+        } catch (error) {
+            serviceResponse.sucess = false;
+            serviceResponse.message = 'Unknown Error'
+            if (error instanceof Error) serviceResponse.message = error.message
+        }
+
+        return serviceResponse;
+
+    }
+
+    public async getDetails(id: number): Promise<ServiceResponse<Subscription>> {
+
+        const serviceResponse: ServiceResponse<Subscription> = {
+            sucess: true,
+        };
+
+        try {
+
+            const existingSubscription = await this.repository.getDetails(id);
+            const existingSubscriptionString = JSON.stringify(existingSubscription)
+
+            if (existingSubscriptionString == '{}' || existingSubscriptionString == '[]') {
+                serviceResponse.sucess = false;
+                serviceResponse.message = "This subscription doesn't exist"
+            }
+            else {
+                serviceResponse.data = existingSubscription
             }
 
             return serviceResponse;
@@ -123,28 +177,5 @@ export class SubscriptionService {
         }
 
         return serviceResponse;
-
-    }
-
-
-    public async deleteSubscription(id: number): Promise<ServiceResponse<Subscription>> {
-
-        const serviceResponse: ServiceResponse<Subscription> = {
-            sucess: true,
-        };
-
-        try {
-            await this.repository.delete(id);
-            serviceResponse.message = 'Subscription deleted'
-        }
-
-        catch (error) {
-            serviceResponse.sucess = false;
-            serviceResponse.message = 'Unknown Error'
-            if (error instanceof Error) serviceResponse.message = error.message
-        }
-
-        return serviceResponse;
-
     }
 }
