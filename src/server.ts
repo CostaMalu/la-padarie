@@ -3,6 +3,7 @@ import { Server } from '@overnightjs/core';
 import * as http from 'http';
 import express from 'express';
 import ProductController from '@src/api/controllers/productController';
+import ComboController from './api/controllers/comboController';
 
 export class SetupServer extends Server {
     private server?: http.Server;
@@ -23,8 +24,10 @@ export class SetupServer extends Server {
 
     private setupControllers(): void {
         const productController = new ProductController();
+        const comboController = new ComboController();
 
         this.addControllers(productController);
+        this.addControllers(comboController);
     }
 
     public start(): void {
