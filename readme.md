@@ -1,5 +1,12 @@
 # LaPadariePrime
 
+Para rodar o projeto:
+
+```
+yarn install
+yarn run:dev
+```
+
 ## Tabelas 
 
 ### Product
@@ -57,3 +64,9 @@ Cada combo possui n itens, porém cada item só pertence a um único combo.
 Cada combo possui n itens, os quais são compostos por produtos. Cada produto pode aparecer em n itens e esses n itens podem estar em vários combos diferentes. 
 
 *comportamento nesse caso: caso o preço de algum produto seja alterado, o preço do combo é diretamente impactado. Um produto vinculado a um item não pode ser deletado e esse item sempre está vinculado a um combo existente.
+
+
+## To-Do
+
+- Refactor entidades
+- Retornar tipos correspondentes dos services
